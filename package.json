@@ -9,7 +9,7 @@
     "test": "node dist/test.js"
   },
   "keywords": ["encryption", "aes", "aes-256-gcm", "crypto", "typescript"],
-  "author": "YourName",
+  "author": "Marco Bytes",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.3.1",
