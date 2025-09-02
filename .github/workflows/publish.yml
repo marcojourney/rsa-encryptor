@@ -1,0 +1,39 @@
+name: Publish Package to npm
+
+on:
+  release:
+    types: [published] # Trigger when a new GitHub Release is created
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Run build
+      - name: Build package
+        run: npm run build
+
+      # Run tests
+      - name: Run tests
+        run: npm test
+
+      # Publish to npm
+      - name: Publish package
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
