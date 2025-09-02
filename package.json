@@ -1,5 +1,5 @@
 {
-  "name": "@marcobytes/aes-gcm-encryptor",
+  "name": "aes-gcm-encryptor",
   "version": "1.0.0",
   "description": "AES-256-GCM encryption and decryption library in TypeScript",
   "main": "dist/index.js",
