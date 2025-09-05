@@ -142,5 +142,3 @@ npm publish --access public
 ## 📜 License
 
 MIT © 2025 [Marco Bytes](https://github.com/marcojourney)
-
-```
