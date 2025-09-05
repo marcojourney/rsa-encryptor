@@ -1,15 +1,17 @@
-# 📦 @marcobytes/aes-gcm-encryptor
 
-AES-256-GCM encryption and decryption library for Node.js and TypeScript.
+````markdown
+# 📦 @marcobytes/rsa-encryptor
+
+RSA encryption and decryption library for Node.js and TypeScript.  
 Designed for simplicity, security, and community use.
 
 ---
 
 ## 🚀 Features
 
-* 🔒 **AES-256-GCM**: Secure authenticated encryption
+* 🔒 **RSA**: Public/private key encryption
 * 🟦 **TypeScript support**: Full typings included
-* ⚡ **Lightweight**: No external crypto dependencies, uses Node.js built-in `crypto`
+* ⚡ **Lightweight**: Uses Node.js built-in `crypto`
 * ✅ **Tested**: Unit tests with [Vitest](https://vitest.dev/)
 * 📖 **Open Source**: MIT licensed
 
@@ -18,13 +20,13 @@ Designed for simplicity, security, and community use.
 ## 📥 Installation
 
 ```bash
-npm install @marcobytes/aes-gcm-encryptor
-```
+npm install @marcobytes/rsa-encryptor
+````
 
 or with yarn:
 
 ```bash
-yarn add @marcobytes/aes-gcm-encryptor
+yarn add @marcobytes/rsa-encryptor
 ```
 
 ---
@@ -34,51 +36,61 @@ yarn add @marcobytes/aes-gcm-encryptor
 ### ES Modules / TypeScript
 
 ```ts
-import { encrypt, decrypt } from "@marcobytes/aes-gcm-encryptor";
+import { generateRSAKeyPair, encrypt, decrypt } from "@marcobytes/rsa-encryptor";
 
-const secretKey = crypto.randomBytes(32); // 256-bit key
-const plaintext = "Hello world!";
+// Generate RSA key pair
+const { publicKey, privateKey } = generateRSAKeyPair();
 
-// Encrypt
-const { iv, ciphertext, authTag } = encrypt(plaintext, secretKey);
-console.log("Ciphertext:", ciphertext.toString("base64"));
+// Message
+const plaintext = "Hello RSA!";
 
-// Decrypt
-const decrypted = decrypt({ iv, ciphertext, authTag }, secretKey);
+// Encrypt with public key
+const encrypted = encrypt(plaintext, publicKey);
+console.log("Encrypted:", encrypted);
+
+// Decrypt with private key
+const decrypted = decrypt(encrypted, privateKey);
 console.log("Decrypted:", decrypted);
 ```
 
 ### CommonJS
 
 ```js
-const { encrypt, decrypt } = require("@marcobytes/aes-gcm-encryptor");
+const { generateRSAKeyPair, encrypt, decrypt } = require("@marcobytes/rsa-encryptor");
 ```
 
 ---
 
 ## 📂 API Reference
 
-### `encrypt(plaintext: string, key: Buffer): { iv: Buffer, ciphertext: Buffer, authTag: Buffer }`
+### `generateRSAKeyPair(modulusLength = 2048): { publicKey: string, privateKey: string }`
 
-Encrypts a UTF-8 string using AES-256-GCM.
+Generates an RSA key pair.
 
-* `plaintext`: string to encrypt
-* `key`: 32-byte Buffer (256-bit secret key)
-
-Returns:
-
-* `iv`: random initialization vector (16 bytes)
-* `ciphertext`: encrypted data
-* `authTag`: authentication tag for integrity check
+* `modulusLength`: RSA key size in bits (default 2048)
+* Returns: PEM formatted `{ publicKey, privateKey }`
 
 ---
 
-### `decrypt(data: { iv: Buffer, ciphertext: Buffer, authTag: Buffer }, key: Buffer): string`
+### `encrypt(plaintext: string, publicKey: string): string`
 
-Decrypts ciphertext back to plaintext.
+Encrypts a UTF-8 string using the provided RSA public key.
 
-* `data`: object containing `{ iv, ciphertext, authTag }`
-* `key`: 32-byte Buffer (same key used for encryption)
+* `plaintext`: string to encrypt
+* `publicKey`: PEM formatted RSA public key
+
+Returns:
+
+* Base64 encoded ciphertext
+
+---
+
+### `decrypt(ciphertext: string, privateKey: string): string`
+
+Decrypts ciphertext back to plaintext using the RSA private key.
+
+* `ciphertext`: Base64 encoded encrypted string
+* `privateKey`: PEM formatted RSA private key
 
 Returns:
 
@@ -112,9 +124,9 @@ npm publish --access public
 
 ## 📌 Roadmap
 
-* [ ] Support for custom key derivation (PBKDF2, HKDF)
-* [ ] Browser-compatible build (using Web Crypto API)
-* [ ] CLI tool for quick file encryption/decryption
+* [ ] Support for different padding modes (PKCS#1 v1.5, OAEP with SHA-512)
+* [ ] CLI tool for generating RSA keys
+* [ ] File encryption/decryption helpers
 
 ---
 
@@ -130,8 +142,6 @@ npm publish --access public
 
 ## 📜 License
 
-MIT © 2025 [Marco Bytes](https://github.com/marcobytes)
+MIT © 2025 [Marco Bytes](https://github.com/marcojourney)
 
----
-
-👉 Do you want me to also **draft the actual `encrypt.ts` and `decrypt.ts` code** so your library has a ready-to-publish working implementation?
+```
