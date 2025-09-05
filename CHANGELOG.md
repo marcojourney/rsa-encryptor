@@ -4,4 +4,10 @@
 
 ### Patch Changes
 
+- 4a9a093: init new version
+
+## 1.0.1
+
+### Patch Changes
+
 - 6f7e6e2: Bug Fix
