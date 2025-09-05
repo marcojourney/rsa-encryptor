@@ -1,6 +1,9 @@
 {
   "name": "rsa-encryptor",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "RSA encryption and decryption library in TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
