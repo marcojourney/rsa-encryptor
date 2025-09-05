@@ -1,7 +1,7 @@
 {
-  "name": "aes-gcm-encryptor",
-  "version": "1.0.1",
-  "description": "AES-256-GCM encryption and decryption library in TypeScript",
+  "name": "rsa-encryptor",
+  "version": "1.0.0",
+  "description": "RSA encryption and decryption library in TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,9 +18,8 @@
   "keywords": [
     "encryption",
     "decryption",
-    "aes",
-    "aes-256-gcm",
-    "crypto",
+    "rsa",
+    "asymmetric-crypto",
     "typescript",
     "security",
     "library"
@@ -29,12 +28,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marcojourney/aes-gcm-encryptor.git"
+    "url": "git+https://github.com/marcojourney/rsa-encryptor.git"
   },
   "bugs": {
-    "url": "https://github.com/marcojourney/aes-gcm-encryptor/issues"
+    "url": "https://github.com/marcojourney/rsa-encryptor/issues"
   },
-  "homepage": "https://github.com/marcojourney/aes-gcm-encryptor#readme",
+  "homepage": "https://github.com/marcojourney/rsa-encryptor#readme",
   "devDependencies": {
     "@changesets/cli": "^2.29.6",
     "@types/node": "^20.19.10",

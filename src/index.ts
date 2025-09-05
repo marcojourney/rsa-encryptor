@@ -1,54 +1,60 @@
 import crypto from "crypto";
 
-const ALGORITHM = "aes-256-gcm";
-const IV_LENGTH = 12;
-const TAG_LENGTH = 16;
-
 /**
- * Encrypts a plaintext string using AES-256-GCM
+ * Encrypts plaintext using RSA public key
  * @param plaintext - The string to encrypt
- * @param key - 32 bytes key (Buffer or hex string)
- * @returns Base64 encoded string of iv + encrypted content + auth tag
+ * @param publicKey - PEM formatted RSA public key
+ * @returns Base64 encoded encrypted string
  */
-export function encrypt(plaintext: string, key: Buffer | string): string {
-  if (typeof key === "string") {
-    key = Buffer.from(key, "hex");
-  }
-  if (!Buffer.isBuffer(key) || key.length !== 32) {
-    throw new Error("Key must be a 32-byte buffer or 64-character hex string");
-  }
-
-  const iv = crypto.randomBytes(IV_LENGTH);
-  const cipher = crypto.createCipheriv(ALGORITHM, key, iv, { authTagLength: TAG_LENGTH });
-
-  const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
-  const tag = cipher.getAuthTag();
-
-  return Buffer.concat([iv, encrypted, tag]).toString("base64");
+export function encrypt(plaintext: string, publicKey: string): string {
+  const buffer = Buffer.from(plaintext, "utf8");
+  const encrypted = crypto.publicEncrypt(
+    {
+      key: publicKey,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, // OAEP recommended
+      oaepHash: "sha256", // Secure hash for OAEP
+    },
+    buffer
+  );
+  return encrypted.toString("base64");
 }
 
 /**
- * Decrypts a base64 encoded string encrypted by AES-256-GCM
- * @param encryptedData - Base64 encoded string of iv + encrypted content + auth tag
- * @param key - 32 bytes key (Buffer or hex string)
+ * Decrypts ciphertext using RSA private key
+ * @param encryptedData - Base64 encoded encrypted string
+ * @param privateKey - PEM formatted RSA private key
  * @returns Decrypted plaintext string
  */
-export function decrypt(encryptedData: string, key: Buffer | string): string {
-  if (typeof key === "string") {
-    key = Buffer.from(key, "hex");
-  }
-  if (!Buffer.isBuffer(key) || key.length !== 32) {
-    throw new Error("Key must be a 32-byte buffer or 64-character hex string");
-  }
-
-  const data = Buffer.from(encryptedData, "base64");
-  const iv = data.slice(0, IV_LENGTH);
-  const tag = data.slice(data.length - TAG_LENGTH);
-  const ciphertext = data.slice(IV_LENGTH, data.length - TAG_LENGTH);
-
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv, { authTagLength: TAG_LENGTH });
-  decipher.setAuthTag(tag);
-
-  const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+export function decrypt(encryptedData: string, privateKey: string): string {
+  const buffer = Buffer.from(encryptedData, "base64");
+  const decrypted = crypto.privateDecrypt(
+    {
+      key: privateKey,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      oaepHash: "sha256",
+    },
+    buffer
+  );
   return decrypted.toString("utf8");
+}
+
+/**
+ * Generates an RSA key pair
+ * @param modulusLength - Key size in bits (default 2048)
+ * @returns { publicKey, privateKey } in PEM format
+ */
+export function generateRSAKeyPair(modulusLength = 2048): { publicKey: string; privateKey: string } {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+    modulusLength,
+    publicKeyEncoding: {
+      type: "spki",
+      format: "pem",
+    },
+    privateKeyEncoding: {
+      type: "pkcs8",
+      format: "pem",
+    },
+  });
+
+  return { publicKey, privateKey };
 }
