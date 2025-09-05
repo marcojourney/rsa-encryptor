@@ -1,5 +1,4 @@
 
-````markdown
 # 📦 @marcobytes/rsa-encryptor
 
 RSA encryption and decryption library for Node.js and TypeScript.  
